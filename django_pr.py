@@ -1,5 +1,4 @@
 from django.http import HttpResponse
-from django.shortcuts import render
 
 articles_list = [
     [1, "Айви Яптанго", 2020, "Самые шикарные парочки знаменитостей 2019 года", ["красота", "гороскопы"]],
@@ -62,32 +61,42 @@ def article_by_id(request, id):
     return HttpResponse(beautiful_html)
 
 
-def get_articles_by_tag(tag):
+def articles_by_tag(request, tag):
     found_articles = []
     for article in articles_list:
         if tag in article[4]:
             found_articles.append(article)
-    return found_articles
-
-
-def articles_by_tag(request, tag):
-    beautiful_html = generate_html(get_articles_by_tag(tag))
+    beautiful_html = generate_html(found_articles)
     return HttpResponse(beautiful_html)
 
 
-def check_age(request):
+html_template = '''<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>My Praktikum Blog</title>
+</head>
+<body>
+    <form action="{where}" method="post">
+        Введите ID статьи и имя нового тега<br><br>
+        ID статьи: <input type="text" name="id"><br><br>
+        Новый тег: <input type="text" name="new_tag"><br><br>
+        <input type="submit" value="Добавить тег">
+    </form>
+</body>
+</html>'''
+
+
+def add_tag(request):
     if request.method == 'GET':
-        user_age = int(request.GET['age'])  # получить возраст из запроса
-        if user_age<18:  # если возраст из запроса меньше разрешённого
-            return render(request, 'articles/access_denied.html')  # отдать шаблон с информацией о запрете доступа
-        else:
-            login = request.GET['login']  # сюда значение login из запроса
-            tag = request.GET['tag']    # сюда значение tag из запроса
-            articles = get_articles_by_tag(tag)
-            context = {
-                'username' : login, # сюда логин, который сообщил пользователь
-                'age' : user_age,  # сюда возраст, который сообщил пользователь
-                'articles' : articles # сюда список статей, в которых есть нужный тег
-            }
-            # вместо многоточия укажите имя HTML-шаблона:
-            return render(request, 'articles/access_granteed.html', context)
+        html = html_template.format(where = request.path)
+        resp = HttpResponse(html)
+        return resp
+    elif request.method == 'POST':
+        article_id = int(request.POST['id'])  # получите ID статьи из запроса
+        new_tag = request.POST['new_tag']    # получите новый тег из запроса
+        # допишите код здесь:
+        for article in articles_list:
+            if article_id == article[0]:
+                article[4].append(new_tag)
+        return article_by_id(request, article_id)
