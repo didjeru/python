@@ -10,7 +10,7 @@ while True:
     user_answer = input()
     count_try = count_try+1
     if user_answer == '=':
-        print(f'ПОБЕДА!!! c {count_try} попытки' )
+        print(f'ПОБЕДА!!! С {count_try} попытки' )
         break
     elif user_answer == '>':
         try:
