@@ -3,9 +3,9 @@ import random
 print('Угадай число от 1 до 100:')
 count_try = 0
 number_min, number_max = 1, 100
-number = random.randint(number_min, number_max)
+comp_number = random.randint(number_min, number_max)
 
-print(f'Ваше число: {number} ?')
+print(f'Ваше число: {comp_number} ?')
 while True:
     user_answer = input()
     count_try = count_try+1
@@ -14,18 +14,18 @@ while True:
         break
     elif user_answer == '>':
         try:
-          number_min = number+1
-          number = random.randint(number_min, number_max)
-          print(f'Ваше число: {number} ?')
+          number_min = comp_number+1
+          comp_number = random.randint(number_min, number_max)
+          print(f'Ваше число: {comp_number} ?')
         except ValueError:
           print('Вы ошиблись')
           break
     elif user_answer == '<':
         try:
-          number_max = number-1
-          number = random.randint(number_min, number_max)
-          print(f'Ваше число: {number} ?')
+          number_max = comp_number-1
+          comp_number = random.randint(number_min, number_max)
+          print(f'Ваше число: {comp_number} ?')
         except ValueError:
           print('Вы ошиблись')
           break
-    else: print('Вы ввели неверный знак')
+    else: print('Вы ввели неверный знак,')
